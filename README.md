@@ -6,7 +6,7 @@ A fun and passionate ongoing project exploring the rich history of ATP Tour data
 ## Table Preview
 Here's a preview of the ATP dataset. This dataset is a collation. Jeff Sackmann's original [dataset](https://github.com/JeffSackmann/tennis_atp) is a collection of several datasets - one each for each season from 1968-2024. I used Tableau Prep to collate them all into one big file - The ATP Tour 1968 - 2024. This dataset is updated to May 2024. If the data is further updated in the future, I plan to update along. I plan to keep adding queries too. Just keep the fun going. This is a big dataset with 193,337 rows, with each row representing a match. 
 
-I will have a separate file describing each column.
+You can find a the link to the data dictionary describing each column [here](https://github.com/JeffSackmann/tennis_atp/blob/master/matches_data_dictionary.txt).
 
 ### ATP Tour First 10 Rows
 | winner_name        | tourney_id                       | tourney_name                                      | surface | draw_size | tourney_level | tourney_date | match_num | winner_id | winner_seed | winner_entry | winner_hand | winner_ht | winner_ioc | winner_age | loser_id | loser_seed | loser_entry | loser_name                 | loser_hand | loser_ht | loser_ioc | loser_age | score               | best_of | round | minutes | w_ace | w_df | w_svpt | w_1stin | w_1stwon | w_2ndwon | w_svgms | w_bpsaved | w_bpfaced | l_ace | l_df | l_svpt | l_1stin | l_1stwon | l_2ndwon | l_svgms | l_bpsaved | l_bpfaced | winner_rank | winner_rank_points | loser_rank | loser_rank_points |
