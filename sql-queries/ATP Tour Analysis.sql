@@ -109,39 +109,7 @@ FROM GS_winners
 ORDER BY latest_year DESC
 ;
 
--- 7. Players with longest winning streak at the US Open
-WITH RR AS (
-SELECT 
-	winner_name, 
-	-- tourney_name, 
-	EXTRACT(YEAR FROM tourney_date) AS year,
-	round,
-	CASE WHEN round = 'F' THEN 7
-		 WHEN round = 'SF' THEN 6
-		 WHEN round = 'QF' THEN 5
-		 WHEN round = 'R16' THEN 4
-		 WHEN round = 'R32' THEN 3
-		 WHEN round = 'R64' THEN 2
-		 WHEN round = 'R128' THEN 1
-	END AS round_rank
-	-- loser_name
-FROM atp_tour
-WHERE tourney_name = 'US Open'
-ORDER BY winner_name, EXTRACT(YEAR FROM tourney_date) ASC
-)
-SELECT 
-	distinct winner_name,
-	year,
-	-- round,
-	-- round_rank,	
-	-- LEAD(round_rank, 1) OVER(PARTITION BY winner_name 
-	-- 	ORDER BY year ASC) as next_round,
-	MAX(round_rank) OVER (PARTITION BY winner_name, year ORDER BY year ASC) AS highest_round_won
-	-- LEAD(round_rank, 1) OVER (PARTITION BY winner_name ORDER BY year ASC) - round_rank AS round_diff
-FROM RR
-ORDER BY winner_name, year;
-
--- 8. Last US Open Champion left in the draw!
+-- 7. Last US Open Champion left in the draw!
 SELECT 
     winner_name AS player,
     EXTRACT(YEAR FROM tourney_date) AS year
@@ -196,7 +164,7 @@ USING (player_name)
 ORDER BY win_percentage desc
 ;
 	
--- 9. Top 10 Players with the best win=percentage
+-- 8. Top 10 Players with the best win=percentage
 WITH wins AS(
 SELECT
 	winner_name as player_name,
@@ -230,7 +198,7 @@ ORDER BY win_percentage desc
 LIMIT 10
 ;
 
--- 10. Pre-Puke Vs Post-Puke Sinner
+-- 9. Pre-Puke Vs Post-Puke Sinner
 WITH Jannik_Sinner AS
 (SELECT 
 	winner_name, 
@@ -271,3 +239,4 @@ FROM Pre_Puke
 UNION ALL 
 SELECT *
 FROM Post_Puke
+;
