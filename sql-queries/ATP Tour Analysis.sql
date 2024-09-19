@@ -310,3 +310,35 @@ GROUP BY season
 ORDER BY season ASC
 ;
 
+-- 13. Tiebreak Record
+WITH winners AS(
+SELECT
+	winner_name as player,
+	SUM((LENGTH(score) - LENGTH(REPLACE(score, '7-6', ''))) / LENGTH('7-6')) AS w_tiebreaks_won,
+	SUM((LENGTH(score) - LENGTH(REPLACE(score, '6-7', ''))) / LENGTH('6-7')) AS w_tiebreaks_lost
+FROM atp_tour
+WHERE (score LIKE '%7-6%' OR score LIKE '%6-7%') 
+AND score NOT LIKE 'RET'
+GROUP BY winner_name
+),
+losers AS(
+SELECT
+	loser_name as player,
+	SUM((LENGTH(score) - LENGTH(REPLACE(score, '6-7', ''))) / LENGTH('6-7')) AS l_tiebreaks_won,
+	SUM((LENGTH(score) - LENGTH(REPLACE(score, '7-6', ''))) / LENGTH('7-6')) AS l_tiebreaks_lost
+FROM atp_tour
+WHERE (score LIKE '%7-6%' OR score LIKE '%6-7%')
+AND score NOT LIKE 'RET'
+GROUP BY loser_name
+
+)
+SELECT
+	w.player,
+	(w_tiebreaks_won + l_tiebreaks_won || '-' || w_tiebreaks_lost + l_tiebreaks_lost)::VARCHAR AS tie_win_loss_record,
+	ROUND((w_tiebreaks_won + l_tiebreaks_won)*100::numeric/(w_tiebreaks_won + l_tiebreaks_won + w_tiebreaks_lost + l_tiebreaks_lost),2) AS tiebreak_win_percent
+FROM winners w
+JOIN losers l USING (player)
+WHERE w_tiebreaks_won + l_tiebreaks_won >=100
+ORDER BY tiebreak_win_percent DESC
+LIMIT 10
+;
