@@ -3,6 +3,9 @@
 ## Introduction
 A fun and passionate ongoing project exploring the rich history of ATP Tour data from 1968 to May 2024. Through PstGRE SQL queries this project uncovers key insights such as top players, American performances at the US Open etc. Combining a love for tennis with data analytics, it showcases skills in data cleaning, analysis, and sports analytics.
 
+Before we dive into the analysis: Here's a quick link to my [LinkedIN](https://www.linkedin.com/in/nukethota/) profile. With that out of the way, let's jump in to the analysis.
+
+
 ## Table Preview
 Here's a preview of the ATP dataset. This dataset is a collation. Jeff Sackmann's original [dataset](https://github.com/JeffSackmann/tennis_atp) is a collection of several datasets - one each for each season from 1968-2024. I used Tableau Prep to collate them all into one big file - The ATP Tour 1968 - 2024. This dataset is updated to May 2024. If the data is further updated in the future, I plan to update along. I plan to keep adding queries too. Just keep the fun going. This is a big dataset with 193,337 rows, with each row representing a match. 
 
