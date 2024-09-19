@@ -562,3 +562,49 @@ ORDER BY season ASC
 | 2022   | 42-7     | 85.71         |
 | 2023   | 56-7     | 88.89         |
 | 2024   | 14-6     | 70.00         |
+
+### 13. Tiebreak Record
+```sql
+WITH winners AS (
+    SELECT
+        winner_name AS player,
+        SUM((LENGTH(score) - LENGTH(REPLACE(score, '7-6', ''))) / LENGTH('7-6')) AS w_tiebreaks_won,
+        SUM((LENGTH(score) - LENGTH(REPLACE(score, '6-7', ''))) / LENGTH('6-7')) AS w_tiebreaks_lost
+    FROM atp_tour
+    WHERE (score LIKE '%7-6%' OR score LIKE '%6-7%') 
+      AND score NOT LIKE 'RET'
+    GROUP BY winner_name
+),
+losers AS (
+    SELECT
+        loser_name AS player,
+        SUM((LENGTH(score) - LENGTH(REPLACE(score, '6-7', ''))) / LENGTH('6-7')) AS l_tiebreaks_won,
+        SUM((LENGTH(score) - LENGTH(REPLACE(score, '7-6', ''))) / LENGTH('7-6')) AS l_tiebreaks_lost
+    FROM atp_tour
+    WHERE (score LIKE '%7-6%' OR score LIKE '%6-7%')
+      AND score NOT LIKE 'RET'
+    GROUP BY loser_name
+)
+SELECT
+    w.player,
+    (w_tiebreaks_won + l_tiebreaks_won || '-' || w_tiebreaks_lost + l_tiebreaks_lost)::VARCHAR AS tie_win_loss_record,
+    ROUND((w_tiebreaks_won + l_tiebreaks_won) * 100::numeric / 
+          (w_tiebreaks_won + l_tiebreaks_won + w_tiebreaks_lost + l_tiebreaks_lost), 2) AS tiebreak_win_percent
+FROM winners w
+JOIN losers l USING (player)
+WHERE (w_tiebreaks_won + l_tiebreaks_won) >= 100
+ORDER BY tiebreak_win_percent DESC
+LIMIT 10;
+```
+| Player          | Tie Win-Loss Record | Tiebreak Win Percent |
+|-----------------|---------------------|----------------------|
+| Novak Djokovic  | 328-168              | 66.13%               |
+| Roger Federer   | 466-247              | 65.36%               |
+| Arthur Ashe     | 167-91               | 64.73%               |
+| Andres Gomez    | 183-105              | 63.54%               |
+| Pete Sampras    | 328-194              | 62.84%               |
+| Andy Roddick    | 303-185              | 62.09%               |
+| John McEnroe    | 188-117              | 61.64%               |
+| John Newcombe   | 114-72               | 61.29%               |
+| Rafael Nadal    | 264-170              | 60.83%               |
+| Milos Raonic    | 236-152              | 60.82%               |
